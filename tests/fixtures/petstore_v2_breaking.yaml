@@ -1,0 +1,94 @@
+openapi: "3.0.0"
+info:
+  title: Petstore Example
+  version: "2.0.0"
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      summary: List all pets
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: apiKey
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A page of pets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet'
+    post:
+      operationId: createPet
+      summary: Create a pet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewPet'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+  /pets/{petId}:
+    get:
+      operationId: getPet
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A pet
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        '404':
+          description: Not found
+          content: {}
+components:
+  schemas:
+    NewPet:
+      type: object
+      required:
+        - name
+        - category
+      properties:
+        name:
+          type: string
+        tag:
+          type: string
+        category:
+          type: string
+    Pet:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        tag:
+          type: string
+        status:
+          type: string
+          enum: [available, pending]
